@@ -56,9 +56,15 @@ const player2 = new Sprite({
 })
  
 
-
-console.log(player);
-
+console.log(player)
+const keys = {
+    a: {
+        pressed: false
+    },
+    d: {
+        pressed: false
+    }
+}
 // Animation loop
 function animate() {
     window.requestAnimationFrame(animate)
@@ -66,64 +72,38 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.update()
     player2.update()
+
+    player.velocity.x = 0
+    
+    if (keys.a.pressed) {
+        player. velocity.x = -1
+    } else if (keys.d.pressed){
+      player.velocity.x = 1  
+    }
 }
 
 animate()
 
 window.addEventListener('keydown', (event) => {
-        switch (event.key) {
-            case 'd':
-                player.velocity.x += 1 // Increase horizontal velocity
-                break;
-            case 'a':
-                player.velocity.x += -1 // Increase horizontal velocity
-                break; 
-            case 'w':
-                player.velocity.y += -10 // Increase horizontal velocity
-                break;    
-            case 's':
-                player.velocity.y += 10 // Increase horizontal velocity
-                break;
-            case '6':
-                player2.velocity.x += 1 // Increase horizontal velocity
-                break;
-            case '4':
-                player2.velocity.x += -1 // Increase horizontal velocity
-                 break; 
-            case '8':
-                player2.velocity.y += -10 // Increase horizontal velocity
-                break;    
-            case '5':
-                player2.velocity.y += 10 // Increase horizontal velocity
-                break;                                                                                    
-        }          
-window.addEventListener('keyup', (event) => {
-        switch (event.key) {
-         case 'd':
-                player.velocity.x = 0 // Increase horizontal velocity
-                break;
+    switch (event.key) {
+        case 'd':
+            keys.d.pressed = true
+            break
         case 'a':
-                player.velocity.x = 0 // Increase horizontal velocity
-                break; 
-        case 'w':
-                player.velocity.y = 0 // Increase horizontal velocity
-                break;    
-        case 's':
-                player.velocity.y = 0 // Increase horizontal velocity
-                break;
-        case '6':
-                player2.velocity.x = 0 // Increase horizontal velocity
-                break;
-        case '4':
-                player2.velocity.x = 0 // Increase horizontal velocity
-                break; 
-        case '8':
-                player2.velocity.y = 0 // Increase horizontal velocity
-                break;    
-        case '5':
-                player2.velocity.y = 0 // Increase horizontal velocity
-                break;                        
-        }
-            })
-            console.log(event.key);
-    })
+            keys.a.pressed = true
+            break
+    }
+    console.log(event.key)  
+})
+
+window.addEventListener('keyup', (event) => {
+    switch (event.key) {
+        case 'd':
+            keys.d.pressed = false
+            break
+        case 'a':
+           keys.a.pressed = false
+            break
+    }
+    console.log(event.key)
+})
