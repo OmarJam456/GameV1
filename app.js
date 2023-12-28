@@ -8,18 +8,21 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 // Sprite class for sprite properties
 const gravity = 0.6 
 class Sprite {
-    constructor({position, velocity, color = 'red'}) {
+    constructor({position, velocity, color = 'red', offset}) {
         this.position = position
         this.velocity = velocity
         this.width = 50
         this.height = 150
-        this.lastKey
-        this  
+        this.lastKey  
         this.hitBox = {
-            position: this.position ,
+            position: {
+            x: this.position.x,
+            y: this.position.y
+            },
+            offset,
             width: 100, 
             height: 50
-        }
+        },
         this.isAttacking
         this.color = color
     } 
@@ -29,7 +32,7 @@ class Sprite {
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         //hit box
-        //if( this.isAttacking) {
+        if( this.isAttacking) {
         c.fillStyle = 'pink'
         c. fillRect(
             this.hitBox.position.x, 
@@ -37,11 +40,13 @@ class Sprite {
             this.hitBox.width, 
             this.hitBox.height
             )
-        //}
+        }
     }
     
     update() {
         this.draw()// Trigger the drawing process
+        this.hitBox.position.x =this.position.x + this.hitBox.offset.x
+        this.hitBox.position.y =this.position.y
         
         this.position.x += this.velocity.x 
         this.position.y += this.velocity.y // Update the position 
@@ -66,6 +71,10 @@ const player = new Sprite({
     velocity: {
         x: 0,
         y: 0
+    }, 
+    offset: {
+        x: 0,
+        y: 0
     }
 })
  const player2 = new Sprite({
@@ -77,7 +86,12 @@ const player = new Sprite({
         x: 0,
         y: 0
     },
-    color: 'blue'
+    color: 'blue',
+    offset : {
+        x: -50,
+        y: 0
+    }
+
 })
  console.log(player)
 
@@ -103,6 +117,14 @@ const keys = {
     }
     }
 
+function rectangularCollision({rectangle1,rectangle2}) {
+    return (
+        rectangle1.hitBox.position.x + rectangle1.hitBox.width >= rectangle2.position.x && 
+        rectangle1.hitBox.position.x <= rectangle2.position.x + rectangle2.width && 
+        rectangle1.hitBox.position.y + rectangle1.hitBox.height >= rectangle2.position.y &&
+        rectangle1.hitBox.position.y <= rectangle2.position.y + rectangle2.height
+    )    
+}
 // Animation loop
 function animate() {
     window.requestAnimationFrame(animate)
@@ -126,13 +148,25 @@ function animate() {
       player2.velocity.x = 5  
     }
 // Collision detection
-    if (player.hitBox.position.x + player.hitBox.width >= player2.position.x && 
-        player.hitBox.position.x <= player2.position.x + player2.width && 
-        player.hitBox.position.y + player.hitBox.height >= player2.position.y &&
-        player.hitBox.position.y <= player2.position.y + player2.height && 
-        player.isAttacking) {
-            player.isAttacking = false
-        console.log('go')
+    if (
+        rectangularCollision({
+            rectangle1: player,
+            rectangle2: player2
+        })&&
+        player.isAttacking
+    ){
+        player.isAttacking = false
+        console.log('player attack')
+    }
+    if (
+        rectangularCollision({
+            rectangle1: player2,
+            rectangle2: player
+        })&&
+        player2.isAttacking
+    ){
+        player2.isAttacking = false
+        console.log('player2 attack')
     }
 }
 
@@ -173,9 +207,11 @@ window.addEventListener('keydown', (event) => {
             break
         case 'ArrowDown':
             player2.velocity.y = 20
-            break                                                          
-    }
-    console.log(event.key)  
+            break
+        case '0':
+            player2.isAttacking = true
+            break                                                             
+    }  
 })
 
 window.addEventListener('keyup', (event) => {
@@ -195,7 +231,10 @@ window.addEventListener('keyup', (event) => {
             break
         case 'ArrowLeft':
            keys.ArrowLeft.pressed = false
-            break                                           
+            break
+        case '0':
+            player2.isAttacking = false
+            break                                                            
     }
-    console.log(event.key)
+
 })
