@@ -7,63 +7,9 @@ canvas.height = 576
 c.fillRect(0, 0, canvas.width, canvas.height)
 // Sprite class for sprite properties
 const gravity = 0.6 
-class Sprite {
-    constructor({position, velocity, color = 'red', offset}) {
-        this.position = position
-        this.velocity = velocity
-        this.width = 50
-        this.height = 150
-        this.lastKey  
-        this.hitBox = {
-            position: {
-            x: this.position.x,
-            y: this.position.y
-            },
-            offset,
-            width: 100, 
-            height: 50
-        },
-        this.isAttacking
-        this.color = color
-    } 
-    
-    draw() {
-        c.fillStyle = this.color
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
-        //hit box
-        if( this.isAttacking) {
-        c.fillStyle = 'pink'
-        c. fillRect(
-            this.hitBox.position.x, 
-            this.hitBox.position.y, 
-            this.hitBox.width, 
-            this.hitBox.height
-            )
-        }
-    }
-    
-    update() {
-        this.draw()// Trigger the drawing process
-        this.hitBox.position.x =this.position.x + this.hitBox.offset.x
-        this.hitBox.position.y =this.position.y
-        
-        this.position.x += this.velocity.x 
-        this.position.y += this.velocity.y // Update the position 
-
-        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-            this.velocity.y = 0
-        } else this.velocity.y += gravity //Stopping gravity at bootom of Screen
-    }
-    attack(){
-        this.isAttacking = true 
-        setTimeout(()=> {
-            this.isAttacking =false
-        }, 100)
-    }
-}
 // Create instances of Sprite
-const player = new Sprite({
+const player = new Fighter({
     position : {
     x: 50,
     y: 0
@@ -77,7 +23,7 @@ const player = new Sprite({
         y: 0
     }
 })
- const player2 = new Sprite({
+ const player2 = new Fighter({
     position : {
     x: 924,
     y: 0
@@ -115,21 +61,22 @@ const keys = {
     ArrowUp: {
         pressed: false
     }
-    }
-
-function rectangularCollision({rectangle1,rectangle2}) {
-    return (
-        rectangle1.hitBox.position.x + rectangle1.hitBox.width >= rectangle2.position.x && 
-        rectangle1.hitBox.position.x <= rectangle2.position.x + rectangle2.width && 
-        rectangle1.hitBox.position.y + rectangle1.hitBox.height >= rectangle2.position.y &&
-        rectangle1.hitBox.position.y <= rectangle2.position.y + rectangle2.height
-    )    
 }
+const background = new Sprite({
+    position: {
+        x: 0, 
+        y: 0,
+    },
+    imageSrc: './img/Background2.png'
+})
+
+decreaseTimer()
 // Animation loop
 function animate() {
     window.requestAnimationFrame(animate)
     c.fillStyle = 'black'
     c.fillRect(0, 0, canvas.width, canvas.height)
+    background.update()
     player.update()
     player2.update()
 
@@ -156,7 +103,8 @@ function animate() {
         player.isAttacking
     ){
         player.isAttacking = false
-        console.log('player attack')
+        player2.health -= 10
+        document.querySelector('#player2Health').style.width = player2.health + '%'
     }
     if (
         rectangularCollision({
@@ -166,7 +114,12 @@ function animate() {
         player2.isAttacking
     ){
         player2.isAttacking = false
-        console.log('player2 attack')
+        player.health -= 10
+        document.querySelector('#playerHealth').style.width = player.health + '%'
+    }
+
+    if (player2.health <= 0 || player.health <= 0) {
+        determineMatch({ player, player2,timerId })
     }
 }
 
