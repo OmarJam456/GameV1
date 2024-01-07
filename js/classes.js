@@ -43,7 +43,7 @@ class Sprite {
       
       //hit box
       if (this.isAttacking) {
-        c.fillStyle = 'green' 
+        c.fillStyle = 'silver' 
         c.fillRect (
           this.hitBox.position.x,
           this.hitBox.position.y,
@@ -61,7 +61,7 @@ class Sprite {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y // Update the position 
 
-        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+        if (this.position.y + this.height + this.velocity.y >= canvas.height-72.2) {
             this.velocity.y = 0
         } else this.velocity.y += gravity; // Stopping gravity at the bottom of the screen
     }

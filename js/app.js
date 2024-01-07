@@ -89,7 +89,8 @@ function determineMatch({player, player2, timerId}){
         document.querySelector('#displayText').innerHTML = 'Player 2 Wins';
     }
 }
-let timer = 30
+//Change Match Time
+let timer = 10
 let timerId
 function decreaseTimer(){
     if(timer > 0) {
@@ -107,7 +108,7 @@ decreaseTimer()
 // Animation loop
 function animate() {
     window.requestAnimationFrame(animate)
-    c.fillStyle = 'black'
+    c.fillStyle = 'orange'
     c.fillRect(0, 0, canvas.width, canvas.height)
     background.update()
     player.update()
@@ -136,7 +137,7 @@ function animate() {
         player.isAttacking
     ){
         player.isAttacking = false
-        player2.health -= 10
+        player2.health -= 8
         document.querySelector('#player2Health').style.width = player2.health + '%'
     }
     if (
@@ -147,10 +148,10 @@ function animate() {
         player2.isAttacking
     ){
         player2.isAttacking = false
-        player.health -= 10
+        player.health -= 8
         document.querySelector('#playerHealth').style.width = player.health + '%'
     }
-
+//match by health
     if (player2.health <= 0 || player.health <= 0) {
         determineMatch({ player, player2,timerId })
     }
