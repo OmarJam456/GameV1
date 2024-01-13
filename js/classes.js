@@ -17,7 +17,7 @@ class Sprite {
   }
   
   class Fighter {
-    constructor({position, velocity, color = 'red', offset}) {
+    constructor({position, velocity, color = this.color, offset}) {
       this.position = position
       this.velocity = velocity
       this.width = 50

@@ -1,5 +1,6 @@
-const canvas = document.querySelector('canvas')
-const c = canvas.getContext('2d')
+const canvas = document.getElementById('gameCanvas');
+const c = canvas.getContext('2d');
+
 
 canvas.width = 1024
 canvas.height = 576
@@ -32,7 +33,7 @@ const player = new Fighter({
         x: 0,
         y: 0
     },
-    color: 'blue',
+    color: 'red',
     offset : {
         x: -50,
         y: 0
@@ -90,7 +91,7 @@ function determineMatch({player, player2, timerId}){
     }
 }
 //Change Match Time
-let timer = 10
+let timer = 60
 let timerId
 function decreaseTimer(){
     if(timer > 0) {
@@ -137,7 +138,7 @@ function animate() {
         player.isAttacking
     ){
         player.isAttacking = false
-        player2.health -= 8
+        player2.health -= 4
         document.querySelector('#player2Health').style.width = player2.health + '%'
     }
     if (
@@ -148,7 +149,7 @@ function animate() {
         player2.isAttacking
     ){
         player2.isAttacking = false
-        player.health -= 8
+        player.health -= 4
         document.querySelector('#playerHealth').style.width = player.health + '%'
     }
 //match by health
